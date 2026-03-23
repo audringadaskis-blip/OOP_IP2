@@ -1,0 +1,46 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic -I.
+
+# Source files
+LIB_SRC = DynamicMatrix.cpp
+LIB_OBJ = DynamicMatrix.o
+DEMO_SRC = demo.cpp
+TEST_SRC = test.cpp
+
+# Executables
+DEMO_EXE = demo
+TEST_EXE = test
+
+# Default target
+all: module.o demo test
+
+# a) Build module.o from .h and .cpp
+module.o: DynamicMatrix.cpp DynamicMatrix.h
+	$(CXX) $(CXXFLAGS) -c DynamicMatrix.cpp -o $(LIB_OBJ)
+
+# b) Build demo executable
+demo: module.o $(DEMO_SRC)
+	$(CXX) $(CXXFLAGS) $(DEMO_SRC) $(LIB_OBJ) -o $(DEMO_EXE)
+
+# c) Run demo
+run_demo: demo
+	./$(DEMO_EXE)
+
+# d) Build test executable
+test: module.o $(TEST_SRC)
+	$(CXX) $(CXXFLAGS) $(TEST_SRC) $(LIB_OBJ) -o $(TEST_EXE)
+
+# e) Run test
+run_test: test
+	./$(TEST_EXE)
+
+# f) Clean everything
+clean:
+	rm -f $(LIB_OBJ) $(DEMO_EXE) $(TEST_EXE) log.txt
+
+# g) Rebuild from scratch
+rebuild: clean all
+
+# Phony targets
+.PHONY: all run_demo run_test clean rebuild
