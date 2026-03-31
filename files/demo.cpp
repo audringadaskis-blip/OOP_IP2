@@ -4,7 +4,7 @@
 using namespace AudrisMatrix;
 
 int main() {
-    std::cout << "=== DynamicMatrix Demo ===" << std::endl;
+    std::cout << "--------- DynamicMatrix Demo ---------" << std::endl;
 
     // 1. Konstruktorius ir tuščia matrica
     DynamicMatrix mat;
@@ -68,6 +68,6 @@ int main() {
         std::cout << "11. Sugauta bounds exception: " << e.what() << std::endl;
     }
 
-    std::cout << "\n=== Demo completed ===" << std::endl;
+    std::cout << "\n--------- Demo completed ---------" << std::endl;
     return 0;
 }

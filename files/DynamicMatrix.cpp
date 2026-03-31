@@ -4,7 +4,7 @@
 
 namespace AudrisMatrix {
 
-    // inner class (Pimpl) - matoma tik šiam failui
+    // INNER CLASS (Pimpl)
     struct DynamicMatrix::Impl {
         int** data;       // dinaminis 2D masyvas: pointer to pointer
         int rows;
@@ -54,14 +54,10 @@ namespace AudrisMatrix {
         }
     };
 
-    // --- constructor / destructor ---
+    //              KONSTRUKTORIUS
     DynamicMatrix::DynamicMatrix() : pImpl(new Impl()) {}
 
-    DynamicMatrix::~DynamicMatrix() {
-        delete pImpl;  // Impl destruktorius išlaisvins data
-    }
-
-    // --- deep copy ---
+    //                 DEEP COPY
     DynamicMatrix::DynamicMatrix(const DynamicMatrix& other)
         : pImpl(new Impl(*other.pImpl)) {}
 
@@ -74,9 +70,9 @@ namespace AudrisMatrix {
         return *this;
     }
 
-    // --- operators ---
+    //              OPERATORS
 
-    // pridedama nauja eilė su 'value' reikšmėmis
+    //              PRIDEDAMA NAUJA EILĖ SU 'value' REIKŠMĖMIS
     DynamicMatrix& DynamicMatrix::operator+=(int value) {
         if (pImpl->rows == 0) {
             pImpl->cols = 1;
@@ -104,35 +100,41 @@ namespace AudrisMatrix {
         return *this;
     }
 
-    // ištrinama eilė 'index'
+    //              IŠTRINAMA EILĖ 'index'
     DynamicMatrix& DynamicMatrix::operator-=(int index) {
+        // 1. Apsauginė sąlyga (guard clause) – iškart meta klaidą
         if (index < 0 || index >= pImpl->rows) {
             throw MatrixException("Row index out of bounds");
         }
+        
+        // 2. Kraštinis atvejis: lieka tuščia matrica
         if (pImpl->rows == 1) {
-            // lieka tuščia matrica
             Impl::deallocateMatrix(pImpl->data, pImpl->rows);
             pImpl->data = nullptr;
             pImpl->rows = 0;
             pImpl->cols = 0;
-        } else {
-            int** newData = Impl::allocateMatrix(pImpl->rows - 1, pImpl->cols);
-            int newIdx = 0;
-            for (int i = 0; i < pImpl->rows; ++i) {
-                if (i == index) continue;  // praleidžiama trintina eilutė
-                for (int j = 0; j < pImpl->cols; ++j) {
-                    newData[newIdx][j] = pImpl->data[i][j];
-                }
-                newIdx++;
-            }
-            Impl::deallocateMatrix(pImpl->data, pImpl->rows);
-            pImpl->data = newData;
-            pImpl->rows--;
+            return *this;  // ✅ Ankstyvas grąžinimas vietoj else
         }
+        
+        int** newData = Impl::allocateMatrix(pImpl->rows - 1, pImpl->cols);
+        int newIdx = 0;
+        
+        for (int i = 0; i < pImpl->rows; ++i) {
+            if (i == index) continue;  // praleidžiama trintina eilutė
+            for (int j = 0; j < pImpl->cols; ++j) {
+                newData[newIdx][j] = pImpl->data[i][j];
+            }
+            newIdx++;
+        }
+        
+        Impl::deallocateMatrix(pImpl->data, pImpl->rows);
+        pImpl->data = newData;
+        pImpl->rows--;
+        
         return *this;
     }
 
-    // visi elementai padauginami iš 'factor'
+    //              VISI ELEMENTAI PADAUGINAMI IŠ 'factor'
     DynamicMatrix& DynamicMatrix::operator*=(int factor) {
         if (!pImpl->data || pImpl->rows == 0 || pImpl->cols == 0) {
             return *this;  // tuščia matrica – nieko nedaroma
@@ -145,7 +147,7 @@ namespace AudrisMatrix {
         return *this;
     }
 
-    // resetinama į tuščią
+    //              RESETINAMA Į TUŠČIĄ
     DynamicMatrix& DynamicMatrix::operator!() {
         Impl::deallocateMatrix(pImpl->data, pImpl->rows);
         pImpl->data = nullptr;
@@ -154,7 +156,7 @@ namespace AudrisMatrix {
         return *this;
     }
 
-    // randama reikšmė ir grąžinama {row, col}
+    //              RANADMA REIKŠMĖ IR GRĄŽINAMA {row, col}
     std::pair<int, int> DynamicMatrix::operator[](int value) const {
         if (!pImpl->data || pImpl->rows == 0 || pImpl->cols == 0) {
             throw MatrixException("Value not found in matrix");
@@ -169,17 +171,19 @@ namespace AudrisMatrix {
         throw MatrixException("Value not found in matrix");
     }
 
-    // --- comparisons ---
+    //              COMPARISONS
     bool DynamicMatrix::operator==(const DynamicMatrix& other) const {
         if (pImpl->rows != other.pImpl->rows || pImpl->cols != other.pImpl->cols) {
             return false;
         }
-        if (!pImpl->data && !other.pImpl->data) {
-            return true;  // abi tuščios
+        
+        if (pImpl->data == other.pImpl->data) {
+            return true;
         }
         if (!pImpl->data || !other.pImpl->data) {
-            return false;  // viena tuščia, kita ne
+            return false;
         }
+        
         for (int i = 0; i < pImpl->rows; ++i) {
             for (int j = 0; j < pImpl->cols; ++j) {
                 if (pImpl->data[i][j] != other.pImpl->data[i][j]) {
@@ -210,7 +214,7 @@ namespace AudrisMatrix {
         return !(*this < other);
     }
 
-    // --- info ---
+    //                      INFO
     std::string DynamicMatrix::toString() const {
         std::stringstream ss;
         ss << "Matrix[" << pImpl->rows << "x" << pImpl->cols << "]:\n";
@@ -228,8 +232,13 @@ namespace AudrisMatrix {
     }
 
     // --- accessors ---
-    int DynamicMatrix::getRows() const { return pImpl->rows; }
-    int DynamicMatrix::getCols() const { return pImpl->cols; }
+    int DynamicMatrix::getRows() const { 
+        return pImpl->rows; 
+    }
+    
+    int DynamicMatrix::getCols() const { 
+        return pImpl->cols; 
+    }
 
     int DynamicMatrix::get(int row, int col) const {
         if (row < 0 || row >= pImpl->rows || col < 0 || col >= pImpl->cols) {
@@ -245,4 +254,16 @@ namespace AudrisMatrix {
         pImpl->data[row][col] = value;
     }
 
+    //                  DESTRUKTORIUS
+    DynamicMatrix::~DynamicMatrix() {
+        delete pImpl;  // Impl destruktorius išlaisvins data
+    }
+
 } // namespace AudrisMatrix
+
+
+
+//  destruktorius pabaigoje
+//  layout's del if'u
+//  trown - i else, o else dalies vengti
+//  klaustukas del operatoriu - 

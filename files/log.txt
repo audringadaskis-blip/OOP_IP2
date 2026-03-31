@@ -1,0 +1,60 @@
+╔════════════════════════════════════════╗
+║   DynamicMatrix – Testų Rezultatai     ║
+╚════════════════════════════════════════╝
+Data: Mar 31 2026 12:10:46
+
+Failas: 1. Matricos kūrimas ir inicializavimas
+--------------------------------------------------
+  [OK] Tuščia matrica: eilučių=0, stulpelių=0
+
+Failas: 2. Elementų įterpimas (operator+=)
+--------------------------------------------------
+  [OK] Įterpti vieną reikšmę (42) į tuščią matricą
+  [OK] Įterpti tris reikšmes iš eilės (1, 2, 3)
+
+Failas: 3. Elementų redagavimas (operator*=)
+--------------------------------------------------
+  [OK] Padauginti visus elementus iš 3 (5→15, 10→30)
+
+Failas: 4. Reikšmių paieška (operator[])
+--------------------------------------------------
+  [OK] Rasti reikšmę 14 – grąžinti poziciją (1, 0)
+  [OK] Ieškoti nerastos reikšmės (999) – turi išmesti klaidą
+
+Failas: 5. Eilučių trynimas (operator-=)
+--------------------------------------------------
+  [OK] Ištrinti vidurinę eilutę (liko: 1, 3)
+  [OK] Trinti neegzistuojantį indeksą (10) – turi išmesti klaidą
+
+Failas: 6. Matricos išvalymas (operator!)
+--------------------------------------------------
+  [OK] Išvalyti matricą – grįžti į tuščią būseną
+
+Failas: 7. Lyginimo operatoriai (==, !=, <, <=, >, >=)
+--------------------------------------------------
+  [OK] Lygybė: dvi identiškos matricos (==)
+  [OK] Nelygybė: skirtingos matricos (!=)
+  [OK] Mažiau (<): lyginimas pagal elementų skaičių (1 < 3)
+  [OK] Operatorių grandinė: <, <=, >, >=, == veikia nuosekliai
+
+Failas: 8. Kopijavimas ir priskyrimas (deep copy)
+--------------------------------------------------
+  [OK] Kopijos nepriklausomumas: keičiant kopiją, originalas nesikeičia
+  [OK] Priskyrimo nepriklausomumas: keičiant vieną, kitas nesikeičia
+  [OK] Savęs priskyrimas (m = m) – neturi sugadinti duomenų
+
+Failas: 9. Ribų tikrinimas ir išvedimo formatas
+--------------------------------------------------
+  [OK] get() su neegzistuojančiu indeksu – turi išmesti klaidą
+  [OK] toString() formatas: turi būti antraštė ir reikšmės
+
+==================================================
+REZULTATŲ SUVESTINĖ
+==================================================
+  Viso testų:    18
+  Sėkmingi:      18 T
+  Nepavyko:      0 F
+  Sėkmė:         100%
+==================================================
+
+ Testų vykdymas baigtas. Rezultatai įrašyti ir sukurtas log.txt

@@ -21,7 +21,7 @@
  * 
  * @author Audris
  * @date March 2026
- * @version 1.0
+ * @version 1.2
  */
 
 namespace AudrisMatrix {

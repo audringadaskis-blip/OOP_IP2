@@ -1,3 +1,4 @@
+# make -f Makefile.txt all
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic -I.
@@ -35,6 +36,9 @@ test: module.o $(TEST_SRC)
 run_test: test
 	./$(TEST_EXE)
 
+# h) Build and run tests in one command ✅ NAUJA
+run_all: all run_test
+
 # f) Clean everything
 clean:
 	rm -f $(LIB_OBJ) $(DEMO_EXE) $(TEST_EXE) log.txt
@@ -43,4 +47,4 @@ clean:
 rebuild: clean all
 
 # Phony targets
-.PHONY: all run_demo run_test clean rebuild
+.PHONY: all run_demo run_test run_all clean rebuild
